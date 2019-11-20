@@ -6,6 +6,17 @@
   "scripts": {
     "start": "electron ."
   },
+  "build": {
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
     "Electron",
@@ -20,6 +31,7 @@
     "electron": "^7.1.1"
   },
   "dependencies": {
+    "jquery": "^3.4.1",
     "python-shell": "^1.0.8"
   }
 }

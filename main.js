@@ -1,27 +1,33 @@
 // Modules to control application life and create native browser window
 //jshint esversion:6
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, remote } = require('electron')
 const path = require('path')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
+    frame: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
+    },
+    show: false
   })
+  mainWindow.autoHideMenuBar = true
+  mainWindow.maximize()
+  mainWindow.show()
 
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
 
-// mainWindow.loadURL('http://tag.pythonanywhere.com/tag')
+  // mainWindow.loadURL('http://tag.pythonanywhere.com/tag')
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 

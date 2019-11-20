@@ -9,9 +9,10 @@
 </head>
 
 <body>
+    <div id="draggable"></div>
     <div id="leftContainer" class="container">
         <div id="logoContainer">
-            <a href="../"><img id="logo" src="{% static "images/Tag1.png" %}" alt="" /></a>
+            <a><img id="logo" src="images/Tag1.png" alt=""/></a>
         </div>
         <div id="searchContainer">
             <input id="searchEntry" type="search">
@@ -25,7 +26,7 @@
                 <div>&gt;</div>
             </button>
             <button id="regexFlags" class="searchButton"><img id="flagIcon"
-                    src="{% static "images/flagWhite.png" %}"></button>
+                    src="images/flagWhite.png"></button>
             <form id="flags">
                 <label class="flagOption hoverWhite"><input type="checkbox" name="flag" value="i"><span></span> &nbsp;(i)
                     Case-insensitive </label>
@@ -94,8 +95,7 @@
     <a id="download_link" class="noDisplay" download="annotations.json" href=””></a>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.4.1.js"
-        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script>const $ = require('jquery');</script>
     <!-- <script src="../node_modules/jszip/dist/jszip.js"></script>
     <script src="../node_modules/file-saver/src/FileSaver.js"></script> -->
     <script src="js/classes/annotation.js"></script>
@@ -106,7 +106,7 @@
     <script src="js/leftPanel.js"></script>
     <script src="js/rightPanel.js"></script>
     <script src="js/search.js"></script>
-    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/menu.js"></script>
     <script src="./renderer.js"></script>
 </body>
 

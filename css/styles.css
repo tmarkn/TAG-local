@@ -15,6 +15,15 @@ body {
   font-family: 'H', 'Trebuchet MS', Helvetica;
 }
 
+#draggable {
+  -webkit-app-region: drag; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 2em; 
+}
+
 .hoverWhite:hover {
   cursor: pointer;
   background-color: white !important;
@@ -43,6 +52,7 @@ body {
 
 #logo {
   max-height: 5vh;
+  cursor: pointer;
 }
 
 #searchContainer {
@@ -223,7 +233,7 @@ body {
   margin-left: 30%;
   height: 100%;
   width: 70%;
-  background: url("/static/css/images/intro.svg") no-repeat top left;
+  background: url("../images/intro.svg") no-repeat top left;
   background-size: 100% 100%;
 }
 
@@ -244,7 +254,6 @@ body {
   height: 100vh;
   padding-top: 1em;
   padding-bottom: 0;
-  z-index: 1;
   transition: box-shadow 0.3s ease, right 0.4s ease;
   overflow: hidden;
 }
@@ -402,7 +411,7 @@ h1, h2 {
   z-index: 2;
   position: absolute;
   overflow: hidden;
-  background: #FAFAFA;
+  background-color: #5e42a6;
   border: 2px #5E42A6 solid;
   list-style-type: none;
   padding: 0;
@@ -410,12 +419,14 @@ h1, h2 {
 }
 
 #delete-menu h6 {
+  color: white;
   margin: 10px 10px 6px;
   font-weight: bold;
   font-size: 14px;
 }
 
 #delete-menu li {
+  background-color: white;
   padding: 8px 14px;
   cursor: pointer;
   font-size: 14px;

@@ -1,4 +1,6 @@
 //jshint esversion:6
+// const { dialog } = require('electron');
+// dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] });
 
 /* ---------- page setup ---------- */
 var tagModel = new TagModel();
@@ -16,8 +18,8 @@ $(document).on("mousedown", function (e) {
   // If the clicked element is not the menu
   if ($(e.target).parents("#delete-menu").length === 0) {
     // Hide it
-    delete_menu.hide(100);
-    delete_menu.text('');
+    delete_menu.hide(100)
+      .text('');
   }
 });
 
@@ -60,9 +62,9 @@ $('#sendML').on('click', function () {
   var formData = new FormData();
   console.log("Sending data to ML");
 
-  formData.append("jsonUpload", blob);
-  formData.append("save-model", $("#save-model").is(':checked'));
-  formData.append("load-model", $("#load-model").is(':checked'));
+  formData.append("jsonUpload", blob)
+    .append("save-model", $("#save-model").is(':checked'))
+    .append("load-model", $("#load-model").is(':checked'));
   $.ajax({
     type: "POST",
     url: "mldata",
@@ -194,18 +196,16 @@ $(window).keydown(function (e) {
 // on mouse release, highlight selected text
 textArea.on('mouseup', function (e) {
   if (e.which === 1) {
-    if (tagModel.currentCategory === null) {
-      alert('Error: Please create a label!');
-      return;
-    }
-    if (tagModel.currentDoc === null) {
-      alert('Error: Please add a document!');
-      return;
-    }
-
-    let range = {};
     if (textArea[0].selectionStart < textArea[0].selectionEnd) {
-      range = {
+      if (tagModel.currentCategory === null) {
+        alert('Error: Please create a label!');
+        return;
+      }
+      if (tagModel.currentDoc === null) {
+        alert('Error: Please add a document!');
+        return;
+      }
+      let range = {
         startPosition: textArea[0].selectionStart,
         endPosition: textArea[0].selectionEnd
       };
@@ -225,13 +225,14 @@ textArea.on('mouseup', function (e) {
         }
       } else {
         delete_menu.css({
-          top: e.pageY + 'px',
-          left: e.pageX + 'px'
+          top: e.pageY,
+          left: e.pageX,
+          'min-width': ''
         });
-        delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">');
-        delete_menu.append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #b7e8c7; font-weight: bold;">Add</li>');
-        delete_menu.append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #ef778c; font-weight: bold;">Delete</li>');
-        delete_menu.show(100);
+        delete_menu.append('<h6>Which?</h6><hr style="margin: 0;">')
+          .append('<li class="add-anno" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #b7e8c7; font-weight: bold;">Add</li>')
+          .append('<li class="delete-anno-part" value="' + range.startPosition + ' ' + range.endPosition + '" style="background-color: #ef778c; font-weight: bold;">Delete</li>')
+          .show(100);
       }
     }
   }
@@ -240,6 +241,9 @@ textArea.on('mouseup', function (e) {
 // on right click, show annotations at position to delete
 textArea.on('contextmenu', function (e) {
   event.preventDefault();
+  if (tagModel.currentDoc === null) {
+    return;
+  }
   let position = textArea[0].selectionStart;
   deleteList = tagModel.currentDoc.getAnnotationsAtPos(position);
 
@@ -266,7 +270,8 @@ textArea.on('contextmenu', function (e) {
       ).show(100).
         css({
           top: e.pageY + 'px',
-          left: e.pageX + 'px'
+          left: e.pageX + 'px',
+          'min-width': ''
         });
     }
   }
@@ -300,8 +305,9 @@ label_list.on('contextmenu', function (e) {
     })
   ).show(100).
     css({
-      top: e.pageY + 'px',
-      left: e.pageX + 'px'
+      top: e.pageY,
+      left: e.pageX,
+      'min-width': ''
     });
 });
 
@@ -407,8 +413,9 @@ doc_list.on('contextmenu', function (e) {
     })
   ).show(100).
     css({
-      top: e.pageY + 'px',
-      left: e.pageX + 'px'
+      top: e.pageY,
+      left: e.pageX,
+      'min-width': ''
     });
 });
 
@@ -772,7 +779,7 @@ String.prototype.trunc = function (n, truncAfterWord = false) {
 };
 
 // select all text in element
-jQuery.fn.selectText = function () {
+$.fn.selectText = function () {
   var doc = document;
   var element = this[0];
   if (doc.body.createTextRange) {
