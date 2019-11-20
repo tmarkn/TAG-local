@@ -8,7 +8,6 @@ html {
 body {
   background-color: #5e42a6;
   overflow-x: hidden;
-  overflow-y: overlay;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -22,6 +21,16 @@ body {
   left: 0; 
   width: 100%; 
   height: 2em; 
+}
+
+img, #logoContainer {
+  -webkit-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-app-region: no-drag;
+}
+
+*:not(#centerContainer) {
+  -webkit-user-select: none;
 }
 
 .hoverWhite:hover {

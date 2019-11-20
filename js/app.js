@@ -240,7 +240,6 @@ textArea.on('mouseup', function (e) {
 
 // on right click, show annotations at position to delete
 textArea.on('contextmenu', function (e) {
-  event.preventDefault();
   if (tagModel.currentDoc === null) {
     return;
   }
@@ -297,7 +296,6 @@ label_list.on('mouseup', '.label', function () {
 
 // on label right click
 label_list.on('contextmenu', function (e) {
-  event.preventDefault();
   delete_menu.append(
     $('<li/>', {
       class: 'delete-label',
@@ -405,7 +403,6 @@ doc_list.on('mouseup', '.doc-name', function (e) {
 
 // right click document list
 doc_list.on('contextmenu', function (e) {
-  event.preventDefault();
   delete_menu.append(
     $('<li/>', {
       class: 'delete-doc',
