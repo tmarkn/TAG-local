@@ -186,11 +186,11 @@ body {
   cursor: pointer;
 }
 
-#downloadBtn, #annotateBtn, #trainBtn, #loadBtn {
+#downloadBtn, #annotateBtn, #trainBtn {
   flex: 1;
 }
 
-#dlContainer {
+.btnGrpContainer {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -370,7 +370,7 @@ h1, h2 {
 }
 
 .annoHeader:hover .dropArrow {
-  content: url("/static/images/arrowDownBlack.png") !important;
+  content: url("../images/arrowDownBlack.png") !important;
 }
 
 .anno-group {

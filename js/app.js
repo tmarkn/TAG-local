@@ -555,7 +555,7 @@ function addLabel(name, color = null) {
     }).append(
       $('<img/>', {
         class: 'colorChange',
-        src: 'https://img.icons8.com/metro/24/000000/color-dropper.png',
+        src: 'images/dropper.png',
       })
     ).append(
       $('<div/>', {
@@ -696,7 +696,7 @@ function renderHighlights() {
       continue;
     }
     var annoHeader = $('<h2/>', {
-      html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
+      html: category[0].label + '<img class="dropArrow upsideDown" src="images/arrowDownWhite.png">',
       class: 'annoHeader hoverWhite',
       value: tagModel.getColor(category[0].label)
     });

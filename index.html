@@ -1,6 +1,5 @@
 
 <!DOCTYPE html>
-<!-- {% load staticfiles %} -->
 <html>
 
 <head>
@@ -15,7 +14,7 @@
             <a><img id="logo" src="images/Tag1.png" alt=""/></a>
         </div>
         <div id="searchContainer">
-            <input id="searchEntry" type="search">
+            <input id="searchEntry" type="search" placeholder="Search">
             <button id="textType" class="searchButton" value="text">
                 <div>txt</div>
             </button>
@@ -56,15 +55,18 @@
 
         </div>
         <div id="bButtonContainer">
-            <button id="downloadBtn" class="bButton">Download</button>
-            <button id="loadBtn" class="bButton">Load</button>
-            <button id="trainBtn" class="bButton">Train</button>
-            <button id="annotateBtn" class="bButton">Annotate</button>
-        </div>
-        <div id="dlContainer">
-            <button id="dlZip" class="dlButton">Download Zip</button>
-            <button id="dlJson" class="dlButton">Download Json</button>
-        </div>
+                <button id="downloadBtn" class="bButton">Download</button>
+                <button id="trainBtn" class="bButton">Train</button>
+                <button id="annotateBtn" class="bButton">Annotate</button>
+            </div>
+            <div id="dlContainer" class="btnGrpContainer">
+                <button id="dlZip" class="dlButton">Download Zip</button>
+                <button id="dlJson" class="dlButton">Download Json</button>
+            </div>
+            <div id="trainContainer" class="btnGrpContainer">
+                <button id="trainCurrent" class="dlButton">Train Current</button>
+                <button id="trainNew" class="dlButton">Load New</button>
+            </div>
     </div>
     <div id="center" class="container"></div>
     <div id="centerContainer" class="container">
@@ -91,17 +93,17 @@
     <!-- No display -->
     <ul id="delete-menu"></ul>
     <input id="colorChangePicker" class="noDisplay" type="color">
-    <input id="fileInputControl" class="noDisplay" type="file" accept="text/plain,.json" multiple>
+    <input id="fileInputControl" class="noDisplay" type="file" accept="text/plain,.json, .zip" multiple>
     <a id="download_link" class="noDisplay" download="annotations.json" href=””></a>
 
     <!-- Scripts -->
     <script>const $ = require('jquery');</script>
-    <!-- <script src="../node_modules/jszip/dist/jszip.js"></script>
-    <script src="../node_modules/file-saver/src/FileSaver.js"></script> -->
     <script src="js/classes/annotation.js"></script>
     <script src="js/classes/category.js"></script>
     <script src="js/classes/doc.js"></script>
     <script src="js/classes/tagmodel.js"></script>
+    <script src="js/node_modules/jszip.min.js"></script>
+    <script src="js/node_modules/FileSaver.js"></script>
     <script src="js/app.js"></script>
     <script src="js/leftPanel.js"></script>
     <script src="js/rightPanel.js"></script>

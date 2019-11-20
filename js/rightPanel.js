@@ -33,14 +33,14 @@ $('#anno-list').on('click', '.annoHeader', function () {
         $(this).attr('value', $(this).attr('value', ).slice(1));
         $(this).css('background-color', '');
         $(this).css('color', 'white');
-        $(this).children('.dropArrow').css('content', 'url("/static/images/arrowDownWhite.png")');
+        $(this).children('.dropArrow').css('content', 'url("images/arrowDownWhite.png")');
     } 
     // is opened // close
     else {
         $(this).css('background-color', $(this).attr('value'));
         $(this).attr('value', '-' + $(this).attr('value'));
         $(this).css('color', 'black');
-        $(this).children('.dropArrow').css('content', 'url("/static/images/arrowDownBlack.png")');
+        $(this).children('.dropArrow').css('content', 'url("images/arrowDownBlack.png")');
     }
 });
 
