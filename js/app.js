@@ -1,7 +1,4 @@
 //jshint esversion:6
-// const { dialog } = require('electron');
-// dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] });
-
 
 /* ---------- page setup ---------- */
 var tagModel = new TagModel();
@@ -47,11 +44,7 @@ $('#dlJson').on('click', function () {
     return;
   }
   var blob = new Blob([tagModel.exportAsString()], { type: 'application/JSON' });
-  var url = window.URL.createObjectURL(blob);
-  console.log("Generated object URL: " + url);
-  document.getElementById('download_link').href = url;
-  document.getElementById('download_link').click();
-  window.URL.revokeObjectURL(url);
+  saveAs(blob, "annotations.json");
 });
 
 // send to mldata
@@ -92,59 +85,96 @@ $('#sendML').on('click', function () {
 $("#fileInputControl").on("change", function () {
   console.log("Found " + this.files.length + " files");
   // add each file to documents
-  $(document.body).css('cursor', 'wait');
-  let invalidFiles = [];
   [].forEach.call(this.files, function (file) {
-    // clean up name of string and check if belongs
-    let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
-    if (tagModel.docIndex(fileName) === -1) {
-      // check text file
-      if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
-        // read, create, and add file
-        let fileReader = new FileReader(file);
-        fileReader.onload = function () {
-          let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
-          console.log("Created Doc: " + fileName);
-          addDoc(newDoc);
-        };
-        fileReader.readAsText(file);
-      }
-      // check json file
-      else if (fileName.match(/.*\.json$/g) !== null) {
-        // read, create, and add file
-        let fileReader = new FileReader(file);
-        fileReader.onload = function () {
-          console.log("Adding Json Doc: " + fileName);
-          let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
-          let errors = loadJsonData(JSON.parse(newJson), fileName);
-          if (errors.length > 0) {
-            alert(errors);        // because of async, these get pushed after the alert goes off, thus having to alert for each instead
-          }
-        };
-        fileReader.readAsText(file);
-      }
-      // wasn't one of the file types
-      else {
-        invalidFiles.push("File type not supported for: '" + fileName + "'\n");
-      }
-    }
-    // name matches one of the files already uploaded
-    else {
-      invalidFiles.push("File already uploaded for: '" + fileName + "'\n");
-    }
+    uploadDocFromFile(file);
   });
-  // alert about invalid files
-  if (invalidFiles.length > 0) {
-    let warning = "";
-    invalidFiles.forEach(function (string) {
-      warning += string;
-    });
-    alert(warning);
-  }
-  $(document.body).css('cursor', 'default');
   this.value = "";
 });
 
+function uploadDocFromFile(file) {
+  // clean up name of string and check if already belongs
+  let fileName = file.name.replace(/\s+/g, "_").replace(/[^A-Za-z0-9\.\-\_]/g, '');
+  if (tagModel.docIndex(fileName) !== -1) {
+    alert("File already uploaded for: '" + fileName + "'\n");
+  }
+  // txt
+  if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+    console.log("Found txt file: '" + fileName + "'");
+    // read, create, and add file
+    let fileReader = new FileReader(file);
+    fileReader.onload = function () {
+      let newDoc = new Doc(fileName, fileReader.result.replace(/[\r\t\f\v\ ]+/g, " "));
+      addDoc(newDoc);
+    };
+    fileReader.readAsText(file);
+  }
+  // json
+  else if (fileName.match(/.*\.json$/g) !== null) {
+    console.log("Found json file: '" + fileName + "'");
+    // read, create, and add file
+    let fileReader = new FileReader(file);
+    fileReader.onload = function () {
+      let newJson = fileReader.result.replace(/[\r\t\f\v\ ]+/g, " ");
+      let errors = loadJsonData(JSON.parse(newJson));
+      if (errors.length > 0) {
+        alert(errors);
+      }
+    };
+    fileReader.readAsText(file);
+  }
+  // zip
+  else if (fileName.match(/.*\.zip$/g) !== null) {
+    console.log("Found zip file: '" + fileName + "'");
+    uploadDocsFromZipFile(file);
+  }
+  // wasn't one of the file types
+  else {
+    alert("File type not supported for: '" + fileName + "'");
+  }
+  // name matches one of the files already uploaded
+}
+
+function uploadDocsFromZipFile(file) {
+  // load zip file
+  JSZip.loadAsync(file).then(function (zip) {
+    // do each file within zip
+    [].forEach.call(Object.keys(zip.files), function (fileName) {
+      if (tagModel.docIndex(fileName) !== -1) {
+        alert("File already uploaded for: '" + fileName + "' in zip");
+        return;
+      }
+      // mac compressed?
+      if (fileName.match(/^__MACOSX/g) !== null) {
+        alert("Ignored __MACOSX compression file: '" + fileName + "'");
+        return;
+      }
+      // find file format then add
+      zip.files[fileName].async('string').then(function (fileContents) {
+        // zip
+        if (fileName.match(/.*\.text$|.*\.txt$/g) !== null) {
+          console.log("Found txt file: '" + fileName + "' in zip");
+          let newDoc = new Doc(fileName, fileContents.replace(/[\r\t\f\v\ ]+/g, " "));
+          addDoc(newDoc);
+        }
+        // json
+        else if (fileName.match(/.*\.json$/g) !== null) {
+          console.log("Found json file: '" + fileName + "' in zip");
+          let newJson = fileContents.replace(/[\r\t\f\v\ ]+/g, " ");
+          let errors = loadJsonData(JSON.parse(newJson));
+          if (errors.length > 0) {
+            alert(errors);
+          }
+        }
+        // wasn't one of the file types
+        else {
+          alert("File type not supported for: '" + fileName + "'\n");
+        }
+      });
+    });
+  });
+}
+
+// check a or d button pressed
 var aKeyPressed = false;
 var dKeyPressed = false;
 $(window).keydown(function (e) {
@@ -561,7 +591,7 @@ function makeRandColor() {
 }
 
 // import json data
-function loadJsonData(data, filename = "", obliterate = false) {
+function loadJsonData(data, filename = "", obliterate = false, ) {
   if (obliterate) {
     console.log('Displaying new data');
     tagModel = new TagModel();
@@ -581,12 +611,12 @@ function loadJsonData(data, filename = "", obliterate = false) {
     });
   } catch (err) {
     // caught an error
-    if(err instanceof TypeError) {
+    if (err instanceof TypeError) {
       // single json file
       try {
         addJsonElement(data);
       } catch (innerErr) {
-        invalidFiles.push("Not valid Input\n")
+        alert("Not valid json Input")
       }
     }
     // we shouldn't be here
@@ -658,18 +688,18 @@ function renderHighlights() {
     if (category.length === 0) {
       continue;
     }
-    $('#anno-list').append(
-      $('<h2/>', {
-        html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
-        class: 'annoHeader hoverWhite',
-        value: tagModel.getColor(category[0].label)
-      })
-    ).append(
+    var annoHeader = $('<h2/>', {
+      html: category[0].label + '<img class="dropArrow upsideDown" src=static/images/arrowDownWhite.png>',
+      class: 'annoHeader hoverWhite',
+      value: tagModel.getColor(category[0].label)
+    });
+    $('#anno-list').append(annoHeader).append(
       $('<ul/>', {
         class: 'anno-group',
         value: category[0].label
       })
     );
+    annoHeader.click();
     // create highlight area
     var highlights = $('<div/>', {
       class: "hwt-highlights hwt-content"
